@@ -1,7 +1,7 @@
 {
   "Scripts": [
     {
-      "URI": "https://raw.githubusercontent.com/iskandar/sample-dsc-systems/master/configure.ps1",
+      "URI": "https://raw.githubusercontent.com/iskandar/windows-automation-demo/master/configurations/dsc/configure.ps1",
       "Destination": "configure.ps1"
     }
   ],
