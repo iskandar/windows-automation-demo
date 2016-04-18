@@ -3,7 +3,7 @@
     "setup": "{{base_script_url}}/setup.ps1",
     "api_token": {
         "name": "token",
-        "value": "{{api_token}"
+        "value": "{{api_token}}"
     },
     "app_name": "{{app_name}}",
     "environment_name": "{{environment_name}}",
