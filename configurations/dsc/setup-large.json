@@ -1,0 +1,159 @@
+{
+  "Scripts": [
+    {
+      "URI": "https://raw.githubusercontent.com/iskandar/sample-dsc-systems/master/configure-large.ps1",
+      "Destination": "configure-large.ps1"
+    }
+  ],
+  "CallbackURLs": [
+    {
+      "Name": "Requestb.in Test",
+      "URI": "http://requestb.in/17dycuv1?TOKEN=1232131231",
+      "Description": "For Testing"
+    },
+    {
+      "Name": "Jenkins Deploy Job",
+      "URI": "http://jenkins.rax-demos.com/buildByToken/buildWithParameters?job=chef-windows-demo/app-deploy-node&token=234234",
+      "Description": "Trigger an Application Deployment"
+    }
+  ],
+  "PSGallery": [
+    {
+      "Name": "xSystemSecurity",
+      "RequiredVersion": "1.1.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xTimeZone",
+      "RequiredVersion": "1.3.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xWindowsUpdate",
+      "RequiredVersion": "2.4.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xRobocopy",
+      "RequiredVersion": "1.2.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xWinEventLog",
+      "RequiredVersion": "1.1.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xPSDesiredStateConfiguration",
+      "RequiredVersion": "3.9.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xPendingReboot",
+      "RequiredVersion": "0.3.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xCertificate",
+      "RequiredVersion": "1.1.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xNetworking",
+      "RequiredVersion": "2.8.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xComputerManagement",
+      "RequiredVersion": "1.5.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xWebDeploy",
+      "RequiredVersion": "1.1.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xWebAdministration",
+      "RequiredVersion": "1.10.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xDscDiagnostics",
+      "RequiredVersion": "2.2.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "GitHubRepository",
+      "RequiredVersion": "1.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "cFirewall",
+      "RequiredVersion": "1.0.1",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "NuGet",
+      "RequiredVersion": "1.3.2",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "cChoco",
+      "RequiredVersion": "2.0.5.22",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "AWSPowerShell",
+      "RequiredVersion": "3.1.59.0",
+      "Repository": "PSGallery"
+    }
+  ],
+  "GitHub": [
+    {
+      "Owner": "OctopusDeploy",
+      "Name": "OctopusDSC",
+      "RequiredVersion": "master"
+    },
+    {
+      "Owner": "scottmuc",
+      "Name": "PowerYaml",
+      "RequiredVersion": "master"
+    },
+    {
+      "Owner": "rsWinAutomationSupport",
+      "Name": "rsWPI",
+      "RequiredVersion": "master"
+    },
+    {
+      "Owner": "rsWinAutomationSupport",
+      "Name": "rsPackageSourceManager",
+      "RequiredVersion": "1.0.4"
+    },
+    {
+      "Owner": "rsWinAutomationSupport",
+      "Name": "rsOctopusDSC",
+      "RequiredVersion": "master"
+    },
+    {
+      "Owner": "rsWinAutomationSupport",
+      "Name": "rsWebConfiguration",
+      "RequiredVersion": "master"
+    },
+    {
+      "Owner": "rsWinAutomationSupport",
+      "Name": "rsInternationalSettings",
+      "RequiredVersion": "2.2.0"
+    },
+    {
+      "Owner": "rsWinAutomationSupport",
+      "Name": "rsScheduledTask",
+      "RequiredVersion": "master"
+    },
+    {
+      "Owner": "rsWinAutomationSupport",
+      "Name": "rsRaxMon",
+      "RequiredVersion": "master"
+    }
+  ]
+}

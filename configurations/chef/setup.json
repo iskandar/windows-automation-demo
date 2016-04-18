@@ -1,0 +1,17 @@
+{
+  "Scripts": [ ],
+  "CallbackURLs": [
+    {
+      "Name": "Requestb.in Test",
+      "URI": "http://requestb.in/17dycuv1?ExistingVar=1232131231",
+      "Description": "For Testing"
+    },
+    {
+      "Name": "Jenkins Chef Bootstrap Job",
+      "URI": "http://jenkins.rax-demos.com/buildByToken/buildWithParameters?job=windows/chef/bootstrap",
+      "Description": "Trigger a remote Chef bootstrap"
+    }
+  ],
+  "PSGallery": [ ],
+  "GitHub": [ ]
+}

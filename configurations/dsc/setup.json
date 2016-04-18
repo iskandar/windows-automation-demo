@@ -1,0 +1,60 @@
+{
+  "Scripts": [
+    {
+      "URI": "https://raw.githubusercontent.com/iskandar/sample-dsc-systems/master/configure.ps1",
+      "Destination": "configure.ps1"
+    }
+  ],
+  "CallbackURLs": [
+    {
+      "Name": "Requestb.in Test",
+      "URI": "http://requestb.in/17dycuv1?TOKEN=1232131231",
+      "Description": "For Testing"
+    },
+    {
+      "Name": "Jenkins Deploy Job",
+      "URI": "http://jenkins.rax-demos.com/buildByToken/buildWithParameters?job=windows/app/deploy-web-node",
+      "Description": "Trigger an Application Deployment"
+    }
+  ],
+  "PSGallery": [
+    {
+      "Name": "xPSDesiredStateConfiguration",
+      "RequiredVersion": "3.9.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xTimeZone",
+      "RequiredVersion": "1.3.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xWinEventLog",
+      "RequiredVersion": "1.1.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "xWebAdministration",
+      "RequiredVersion": "1.10.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "GitHubRepository",
+      "RequiredVersion": "1.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+
+      "Name": "xDscDiagnostics",
+      "RequiredVersion": "2.2.0.0",
+      "Repository": "PSGallery"
+    }
+  ],
+  "GitHub": [
+    {
+      "Owner": "rsWinAutomationSupport",
+      "Name": "rsWPI",
+      "RequiredVersion": "master"
+    }
+  ]
+}
