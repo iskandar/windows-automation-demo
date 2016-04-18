@@ -15,7 +15,6 @@ Example Env vars:
 export OS_USERNAME=YOUR_USERNAME
 export OS_REGION=LON
 export OS_API_KEY=fc8234234205234242ad8f4723426cfe
-export NODE_CALLBACK_URL="http://jenkins.server/buildByToken/buildWithParameters?job=chef-windows-demo/chef-bootstrap&token=1234123123&NODE_IP=\$PublicIp&NODE_NAME=\$Hostname"
 export NODE_PASSWORD=iojl3458lkjalsdfkj
 '''
 
@@ -35,11 +34,6 @@ base_script_url = os.environ.get('BASE_SCRIPT_URL', "https://raw.githubuserconte
 setup_url = os.environ.get('SETUP_URL', "https://raw.githubusercontent.com/iskandar/windows-automation-demo"
                                         "/configurations/dsc/setup.json")
 api_token = os.environ.get('SETUP_API_TOKEN', "")
-
-
-# Set up a callback URL that our node will request after booting up. This can be used to trigger bootstrapping.
-# $PublicIp and $Hostname vars are populated in the Powershell 'run.txt' script.
-node_callback_url = os.environ.get('NODE_CALLBACK_URL', "http://requestb.in/18vsdkl1?FOO=BAR")
 
 # Authenticate
 pyrax.set_setting("identity_type", "rackspace")
@@ -91,22 +85,6 @@ personalities = [
     },
 ]
 
-# Parse the callback URL and add new vars
-url_parts = urlparse.urlparse(node_callback_url)
-
-query_vars = urlparse.parse_qsl(url_parts.query)
-query_vars.append(['NAMESPACE', app_name])
-query_vars.append(['ENVIRONMENT', environment_name])
-
-node_callback_url = urlparse.urlunparse([
-    url_parts.scheme,
-    url_parts.netloc,
-    url_parts.path,
-    url_parts.params,
-    urllib.urlencode(query_vars).replace('%24', '$').replace('%2F', '/'),
-    None
-])
-
 # Use templating with our personality files
 template_vars = {
     "base_script_url": base_script_url,
@@ -121,8 +99,7 @@ template_vars = {
     "subdomain_name": subdomain_name,
     "node_base_name": node_name,
     "node_username": node_username,
-    "node_password": node_password,
-    "node_callback_url": node_callback_url,
+    "node_password": node_password
 }
 print("", file=sys.stderr)
 print("--- Params", file=sys.stderr)

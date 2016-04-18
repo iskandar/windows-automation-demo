@@ -12,6 +12,12 @@
       "Description": "Trigger a remote Chef bootstrap"
     }
   ],
-  "PSGallery": [ ],
+  "PSGallery": [
+    {
+      "Name": "GitHubRepository",
+      "RequiredVersion": "1.0.0",
+      "Repository": "PSGallery"
+    }
+  ],
   "GitHub": [ ]
 }

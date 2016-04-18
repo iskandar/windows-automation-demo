@@ -41,7 +41,7 @@ end
 
 # Create a new directory.
 # We want this to be empty so our Load Balancer does not add this node into rotation.
-directory "#{node['iis']['docroot']}\\WebApplication1" do
+directory "C:\\Applications\\WebApplication1" do
   action :create
 end
 
@@ -52,7 +52,7 @@ end
 # end
 
 # Create a new IIS Pool
-iis_pool 'WebApplication1' do
+iis_pool 'WebApplication1-Pool' do
   runtime_version "4.0"
   pipeline_mode :Integrated
   pool_identity :ApplicationPoolIdentity
@@ -63,10 +63,10 @@ iis_pool 'WebApplication1' do
 end
 
 # Create a new IIS site
-iis_site 'WebApplication1' do
+iis_site 'WebApplication1-Site' do
   protocol :http
   port 80
-  path "#{node['iis']['docroot']}\\WebApplication1"
+  path "C:\\Applications\\WebApplication1"
   application_pool 'WebApplication1'
   action [:add,:start]
 end

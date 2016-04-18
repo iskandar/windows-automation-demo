@@ -8,7 +8,7 @@
   "CallbackURLs": [
     {
       "Name": "Requestb.in Test",
-      "URI": "http://requestb.in/17dycuv1?TOKEN=1232131231",
+      "URI": "http://requestb.in/17dycuv1?ExistingVar=1232131231",
       "Description": "For Testing"
     },
     {
