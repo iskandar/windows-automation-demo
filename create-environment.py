@@ -94,6 +94,7 @@ wait = True
 wait_timeout = 1800
 
 # Get the image ID from the name
+image_id = None
 for image in imgs.list_all():
     if image.name == image_name:
         print("Using image", image.name, image.id)
