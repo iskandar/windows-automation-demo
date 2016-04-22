@@ -67,7 +67,7 @@ for lb in filtered:
     print("Deleting LB", repr(lb))
     lb.delete()
 
-if domain_name is not None:
+if domain_name is not None and domain_name is not '':
     filtered = (dom for dom in dns.list() if dom.name == domain_name)
     for dom in filtered:
         # Delete existing DNS records if any exist

@@ -15,10 +15,13 @@ Usage:
   create-environment.py APP_NAME ENVIRONMENT
                         [--bootstrap_type=<t>]
                         [--initial_policy=<p>]
-                        [--node_username=<u>] [--node_password=<pw>]
-                        [--image_name=<i>] [--flavor_id=<f>]
+                        [--node_username=<u>]
+                        [--node_password=<pw>]
+                        [--image_name=<i>]
+                        [--flavor_id=<f>]
                         [--domain_name=<d>]
-                        [--base_script_url=<u>] [--setup_url=<u>]
+                        [--base_script_url=<u>]
+                        [--setup_url=<u>]
                         [--api_token=<t>]
   create-environment.py (-h | --help)
   create-environment.py --version
@@ -29,10 +32,10 @@ Arguments:
 
 Options:
   -h --help             Show this screen.
-  --bootstrap_type=<b>  The server bootstrap type ('dsc' or 'chef') [default: dsc].
+  --bootstrap_type=<t>  The server bootstrap type ('dsc' or 'chef') [default: dsc].
   --initial_policy=<p>  The initial scaling policy to trigger after creation [default: Set to 2].
   --node_username=<u>   The local admin username [default: localadmin].
-  --node_password=<p>   The local admin password [default: Q1w2e3r4].
+  --node_password=<pw>  The local admin password [default: Q1w2e3r4].
   --image_name=<i>      The Rackspace Public Cloud server image name [default: Windows Server 2012 R2].
   --flavor_id=<f>       The Rackspace Public Cloud server flavor ID [default: general1-2].
   --domain_name=<d>     A base domain name to use for subdomains
@@ -43,7 +46,7 @@ Options:
   --api_token=<t>       An API token added to callback and script URLs.
 
 Environment variables:
-  OS_REGION             A Rackspace Public Cloud region [default: LON]
+  OS_REGION             A Rackspace Public Cloud region (default: LON)
   OS_USERNAME           A Rackspace Public Cloud username
   OS_API_KEY            A Rackspace Public Cloud API key
   NODE_PASSWORD         The Cloud Server local admin password (overrides any value specified with --node_password)
@@ -185,7 +188,7 @@ lb = clb.create(lb_name, port=80, protocol="HTTP",
                 nodes=[], virtual_ips=[clb.VirtualIP(type="PUBLIC")],
                 algorithm="ROUND_ROBIN", healthMonitor=health_monitor)
 
-if domain_name is not None:
+if domain_name is not None and domain_name is not '':
     # Set up a DNS subdomain
     dns_records = []
     filtered = (vip for vip in lb.virtual_ips if vip.type == 'PUBLIC' and vip.ip_version == 'IPV4')
