@@ -1,26 +1,38 @@
 #!/usr/bin/env python
+
 from __future__ import print_function
 import pyrax
 import os
-import time
-import json
-import sys
-from jinja2 import Template
-import urlparse
-import urllib
+from docopt import docopt
 
-'''
-Example Env vars:
+USAGE = """Destroy a demo environment
 
-export OS_USERNAME=YOUR_USERNAME
-export OS_REGION=LON
-export OS_API_KEY=fc8234234205234242ad8f4723426cfe
-'''
+Usage:
+  destroy-environment.py APP_NAME ENVIRONMENT [--domain_name=<d>]
+  destroy-environment.py (-h | --help)
+  destroy-environment.py --version
 
-# Consume our environment vars
-app_name = os.environ.get('NAMESPACE', 'win')
-environment_name = os.environ.get('ENVIRONMENT', 'stg')
-domain_name = os.environ.get('DOMAIN_NAME', None)
+Arguments:
+  APP_NAME              The application namespace. Should be unique within a Public Cloud Account.
+  ENVIRONMENT           The name of the environment (e.g. stg, prd)
+
+Options:
+  -h --help             Show this screen.
+  --domain_name=<d>     A base domain name to use for subdomains
+
+Environment variables:
+  OS_REGION             A Rackspace Public Cloud region [default: LON]
+  OS_USERNAME           A Rackspace Public Cloud username
+  OS_API_KEY            A Rackspace Public Cloud API key
+"""
+
+# Parse our CLI arguments
+arguments = docopt(USAGE, version='1.0.0')
+
+# Set convenience variables from arguments/environment
+app_name = arguments['APP_NAME']
+environment_name = arguments['ENVIRONMENT']
+domain_name = arguments['--domain_name']
 
 # Authenticate
 pyrax.set_setting("identity_type", "rackspace")

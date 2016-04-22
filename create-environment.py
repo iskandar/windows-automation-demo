@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+
 from __future__ import print_function
 import pyrax
 import os
@@ -6,35 +7,68 @@ import time
 import json
 import sys
 from jinja2 import Template
-import urlparse
-import urllib
+from docopt import docopt
 
-'''
-Example Env vars:
+USAGE = """Create a demo environment
 
-export OS_USERNAME=YOUR_USERNAME
-export OS_REGION=LON
-export OS_API_KEY=fc8234234205234242ad8f4723426cfe
-export NODE_PASSWORD=iojl3458lkjalsdfkj
-'''
+Usage:
+  create-environment.py APP_NAME ENVIRONMENT
+                        [--bootstrap_type=<t>]
+                        [--initial_policy=<p>]
+                        [--node_username=<u>] [--node_password=<pw>]
+                        [--image_name=<i>] [--flavor_id=<f>]
+                        [--domain_name=<d>]
+                        [--base_script_url=<u>] [--setup_url=<u>]
+                        [--api_token=<t>]
+  create-environment.py (-h | --help)
+  create-environment.py --version
 
-# Consume our environment vars
-app_name = os.environ.get('NAMESPACE', 'win')
-environment_name = os.environ.get('ENVIRONMENT', 'stg')
-initial_policy = os.environ.get('INITIAL_POLICY', 'Set to 2')
-node_username = os.environ.get('NODE_USERNAME', 'localadmin')
-node_password = os.environ.get('NODE_PASSWORD', 'Q1w2e3r4')
-image_name = os.environ.get('NODE_IMAGE_NAME', "Windows Server 2012 R2")
-image_id = os.environ.get('NODE_IMAGE_ID', None) # Deprecated
-flavor_id = os.environ.get('NODE_FLAVOR_ID', "general1-2")
-domain_name = os.environ.get('DOMAIN_NAME', None)
+Arguments:
+  APP_NAME              The application namespace. Should be unique within a Public Cloud Account.
+  ENVIRONMENT           The name of the environment (e.g. stg, prd)
+
+Options:
+  -h --help             Show this screen.
+  --bootstrap_type=<b>  The server bootstrap type ('dsc' or 'chef') [default: dsc].
+  --initial_policy=<p>  The initial scaling policy to trigger after creation [default: Set to 2].
+  --node_username=<u>   The local admin username [default: localadmin].
+  --node_password=<p>   The local admin password [default: Q1w2e3r4].
+  --image_name=<i>      The Rackspace Public Cloud server image name [default: Windows Server 2012 R2].
+  --flavor_id=<f>       The Rackspace Public Cloud server flavor ID [default: general1-2].
+  --domain_name=<d>     A base domain name to use for subdomains
+  --base_script_url=<u> The base URL for our bootstrap.ps1 and setup.ps1 scripts
+                        [default: https://raw.githubusercontent.com/iskandar/windows-automation-demo/bootstrap/scripts].
+  --setup_url=<u>       The URL for a setup.json manifest file
+                        [default: https://raw.githubusercontent.com/iskandar/windows-automation-demo/configurations/dsc/setup.json].
+  --api_token=<t>       An API token added to callback and script URLs.
+
+Environment variables:
+  OS_REGION             A Rackspace Public Cloud region [default: LON]
+  OS_USERNAME           A Rackspace Public Cloud username
+  OS_API_KEY            A Rackspace Public Cloud API key
+  NODE_PASSWORD         The Cloud Server local admin password (overrides any value specified with --node_password)
+  SETUP_API_TOKEN       An API token added to callback and script URLs (overrides any value specified with --api_token)
+"""
+
+# Parse our CLI arguments
+arguments = docopt(USAGE, version='1.0.0')
+
+# Set convenience variables from arguments/environment
+bootstrap_type = arguments['--bootstrap_type']
+app_name = arguments['APP_NAME']
+environment_name = arguments['ENVIRONMENT']
+
+initial_policy = arguments['--initial_policy']
+node_username = arguments['--node_username']
+node_password = os.environ.get('NODE_PASSWORD', arguments['--node_password'])
+image_name = arguments['--image_name']
+flavor_id = arguments['--flavor_id']
+domain_name = arguments['--domain_name']
 
 # The base URL for our bootstrap.ps1 and setup.ps1 scripts
-base_script_url = os.environ.get('BASE_SCRIPT_URL', "https://raw.githubusercontent.com/iskandar/windows-automation-demo"
-                                                    "/bootstrap/scripts")
-setup_url = os.environ.get('SETUP_URL', "https://raw.githubusercontent.com/iskandar/windows-automation-demo"
-                                        "/configurations/dsc/setup.json")
-api_token = os.environ.get('SETUP_API_TOKEN', "")
+base_script_url = arguments['--base_script_url']
+setup_url = arguments['--setup_url']
+api_token = os.environ.get('SETUP_API_TOKEN', arguments['--api_token'])
 
 # Authenticate
 pyrax.set_setting("identity_type", "rackspace")
@@ -99,6 +133,7 @@ personalities = [
 
 # Use templating with our personality files
 template_vars = {
+    "bootstrap_type": bootstrap_type,
     "base_script_url": base_script_url,
     "setup_url": setup_url,
     "api_token": api_token,
@@ -115,7 +150,7 @@ template_vars = {
 }
 print("", file=sys.stderr)
 print("--- Params", file=sys.stderr)
-print(json.dumps(template_vars), file=sys.stderr)
+print(json.dumps(template_vars, indent=4, separators=(',', ': ')), file=sys.stderr)
 print("---", file=sys.stderr)
 
 # Build personality list with content
@@ -131,7 +166,7 @@ for p in personalities:
 
 print("", file=sys.stderr)
 print("--- Personalities", file=sys.stderr)
-print(json.dumps(personality_list), file=sys.stderr)
+print(json.dumps(personality_list, indent=4, separators=(',', ': ')), file=sys.stderr)
 print("---", file=sys.stderr)
 
 # Create a load balancer with a Health monitor
@@ -142,7 +177,7 @@ health_monitor = {
     "attemptsBeforeDeactivation": 2,
     "path": "/",
     "statusRegex": "^[23][0-9][0-9]$", # We do NOT want to match 4xx responses
-    "bodyRegex": ".*CHEF_WINDOWS_DEMO_APP.*" # Parse for a specific string to avoid default IIS page false positives
+    "bodyRegex": ".*WINDOWS_AUTOMATION_DEMO.*" # Parse for a specific string to avoid default IIS page false positives
 }
 
 lb = clb.create(lb_name, port=80, protocol="HTTP",
@@ -201,6 +236,7 @@ metadata = {
     "environment": environment_name,
     "role": "web",
     "app": app_name,
+    "bootstrap_type": bootstrap_type
 }
 sg = au.create(asg_name,
                cooldown=60,
@@ -212,7 +248,7 @@ sg = au.create(asg_name,
                disk_config="MANUAL",
                metadata=metadata,
                personality=personality_list,
-               networks=[{ "uuid": cnw.PUBLIC_NET_ID }, { "uuid": cnw.SERVICE_NET_ID }],
+               networks=[{"uuid": cnw.PUBLIC_NET_ID}, {"uuid": cnw.SERVICE_NET_ID}],
                load_balancers=(lb.id, 80))
 
 for p in policies:
@@ -228,7 +264,7 @@ if wait:
     infinite = wait_timeout == 0
     while infinite or time.time() < end_time:
         state = sg.get_state()
-        print("Scaling Group State: ", json.dumps(state), file=sys.stderr)
+        print("Scaling Group State: ", json.dumps(state, indent=4, separators=(',', ': ')), file=sys.stderr)
 
         if state["pending_capacity"] == 0:
             if state["active_capacity"] == 0:
@@ -241,4 +277,4 @@ print(json.dumps({
     "id": sg.id,
     "name": asg_name,
     "metadata": metadata,
-}))
+}, indent=4, separators=(',', ': ')))
