@@ -24,7 +24,8 @@ environment_name = os.environ.get('ENVIRONMENT', 'stg')
 initial_policy = os.environ.get('INITIAL_POLICY', 'Set to 2')
 node_username = os.environ.get('NODE_USERNAME', 'localadmin')
 node_password = os.environ.get('NODE_PASSWORD', 'Q1w2e3r4')
-image_id = os.environ.get('NODE_IMAGE_ID', "a35e8afc-cae9-4e38-8441-2cd465f79f7b")
+image_name = os.environ.get('NODE_IMAGE_NAME', "Windows Server 2012 R2")
+image_id = os.environ.get('NODE_IMAGE_ID', None) # Deprecated
 flavor_id = os.environ.get('NODE_FLAVOR_ID', "general1-2")
 domain_name = os.environ.get('DOMAIN_NAME', None)
 
@@ -46,6 +47,7 @@ cnw = pyrax.cloud_networks
 clb = pyrax.cloud_loadbalancers
 au = pyrax.autoscale
 dns = pyrax.cloud_dns
+imgs = pyrax.images
 
 # Derived names
 asg_name = app_name + "-" + environment_name
@@ -56,6 +58,16 @@ subdomain_name = asg_name
 # Other params
 wait = True
 wait_timeout = 1800
+
+# Get the image ID from the name
+for image in imgs.list_all():
+    if image.name == image_name:
+        print("Using image", image.name, image.id)
+        image_id = image.id
+        break
+
+if image_id is None:
+    raise Exception("Cannot find OS image " + image_name)
 
 # Prepare data for server 'personalities', which is the only way to inject files and bootstrap Windows Servers
 # in the Rackspace Public Cloud (as of 2016-03)
