@@ -14,8 +14,20 @@ Start-Transcript -Path $Dir\logs\bootstrap.log -Append
 
 $SetupShimFileName = "$Dir\setup-shim.ps1"
 
+# @TODO Add support for Windows Server 2008?
+# Get OS Version
+# [environment]::OSVersion.Version
+# (Get-CimInstance Win32_OperatingSystem).version
+#$computer = "."
+#Get-WMIObject Win32_OperatingSystem -ComputerName "."
+
 # Install WMF5 without rebooting
+# Server 2012 R2
 $WMF5FileName = "Win8.1AndW2K12R2-KB3134758-x64.msu"
+
+# Server 2008 R2
+# $WMF5FileName = "Win7AndW2K8R2-KB3134760-x64.msu"
+
 $WMF5BaseURL = "https://download.microsoft.com/download/2/C/6/2C6E1B4A-EBE5-48A6-B225-2D2058A9CEFB"
 $WMF5TempDir = "${Env:WinDir}\Temp"
 function Install-WMF5 {
@@ -25,7 +37,15 @@ function Install-WMF5 {
 
 # Set up a boot task to call our setup-shim
 function Create-BootTask {
+
     $TaskName = 'rsBoot'
+
+    # Is this a better way for Server 2008?
+    #$T = New-JobTrigger -AtStartup -RandomDelay 00:00:10
+    #Register-ScheduledJob -Trigger $T -FilePath $SetupShimFileName -Name rsBoot
+    #Get-ScheduledJob -Name rsBootx
+    #Unregister-ScheduledJob -Name rsBoot
+
     if (Get-ScheduledTask -TaskName $TaskName -ErrorAction SilentlyContinue) {
         return
     }

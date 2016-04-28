@@ -3,6 +3,9 @@ $Dir = "C:\cloud-automation"
 New-Item -Path $Dir\logs -ItemType Directory -ErrorAction SilentlyContinue
 Start-Transcript -Path $Dir\logs\configure.log -Append
 
+# Load our bootstrap config
+$BootstrapConfig = (Get-Content $Dir\bootstrap-config.json) -join "`n" | ConvertFrom-Json
+
 # @TODO Load from JSON or YAML
 $ConfigurationData = @{
     AllNodes = @();
@@ -10,8 +13,8 @@ $ConfigurationData = @{
 }
 
 $WebServerFeatures = @("Web-Mgmt-Console","Web-Mgmt-Service","Web-Default-Doc", `
-                     "Web-Asp-Net45","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content",`
-                     "Web-Http-Logging","Web-Stat-Compression","Web-Filtering",`
+                     "Web-Asp-Net45","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content", `
+                     "Web-Http-Logging","Web-Stat-Compression","Web-Filtering", `
                      "Web-ISAPI-Ext","Web-ISAPI-Filter")
 
 $WPIProducts = @(
@@ -118,6 +121,13 @@ Configuration WebNode {
                 Product    = $Product.Name
                 DependsOn  = $Product.DependsOn
             }
+        }
+
+        Environment BootstrapType
+        {
+            Name = "BootstrapType"
+            Value = $BootstrapConfig.bootstrap_type
+            Ensure = "Present"
         }
 
         foreach ($App in $WebApplications) {

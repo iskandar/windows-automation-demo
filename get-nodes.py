@@ -9,9 +9,9 @@ from docopt import docopt
 USAGE = """Get some nodes from an application environment
 
 Usage:
-  create-environment.py APP_NAME ENVIRONMENT ROLE
-  create-environment.py (-h | --help)
-  create-environment.py --version
+  get-nodes.py APP_NAME ENVIRONMENT ROLE
+  get-nodes.py (-h | --help)
+  get-nodes.py --version
 
 Arguments:
   APP_NAME              The application namespace. Should be unique within a Public Cloud Account.
