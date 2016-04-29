@@ -108,11 +108,14 @@ Configuration WebNode {
 
         # IIS and related features
         foreach ($Feature in $WebServerFeatures) {
-            WindowsFeature "$Feature$Number"
-            {
+            WindowsFeature "$Feature$Number" {
                 Ensure     = "Present"
                 Name       = $Feature
                 DependsOn  = "[WindowsFeature]IIS"
+            }
+            Log "$Feature$Number-Log" {
+                Message = "Finished adding WindowsFeature $Feature$Number"
+                DependsOn = "[WindowsFeature]$Feature$Number"
             }
         }
 
@@ -121,13 +124,10 @@ Configuration WebNode {
                 Product    = $Product.Name
                 DependsOn  = $Product.DependsOn
             }
-        }
-
-        Environment BootstrapType
-        {
-            Name = "BootstrapType"
-            Value = $BootstrapConfig.bootstrap_type
-            Ensure = "Present"
+            Log "$($Product.Name)-Log" {
+                Message = "Finished adding WPI Product $($Product.Name)"
+                DependsOn = "[rsWPI]$($Product.Name)"
+            }
         }
 
         foreach ($App in $WebApplications) {
@@ -152,7 +152,33 @@ Configuration WebNode {
                 Ensure          = "Present"
                 DependsOn       = "[WindowsFeature]IIS"
             }
+            Log "$($App.Name)-Log" {
+                # The message below gets written to the Microsoft-Windows-Desired State Configuration/Analytic log
+                Message = "Finished configuring IIS for $($App.Name) ($($App.PhysicalPath))"
+                DependsOn = "[xWebsite]$($App.Name)-Site"
+            }
         }
+
+        Environment BootstrapTypeEnvironmentVariable {
+            Name   = "BootstrapType"
+            Value  = $BootstrapConfig.bootstrap_type
+            Ensure = "Present"
+        }
+
+        Registry KeyOne {
+            Ensure    = "Present"  # You can also set Ensure to "Absent"
+            Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo"
+            ValueName = "ExampleValue"
+            ValueData = "ExampleData"
+            Force     = $true
+        }
+
+        Group GroupExample {
+             # This will remove TestGroup, if present
+             # To create a new group, set Ensure to "Present“
+             Ensure = "Absent"
+             GroupName = "TestGroup"
+         }
     }
 }
 
