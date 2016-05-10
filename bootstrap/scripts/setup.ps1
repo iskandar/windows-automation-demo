@@ -29,10 +29,10 @@ Push-Location -Path $Dir
 #Set-PackageSource -Trusted -Name nuget.org -ProviderName PowerShellGet
 
 # Load our bootstrap config
+# We never refresh the bootstrap-config data
 $BootstrapConfig = (Get-Content $Dir\bootstrap-config.json) -join "`n" | ConvertFrom-Json
 
-# Download our setup.json file
-# Load our remote Modules config file
+# Always download our setup.json file
 $URI = Get-Content "$Dir\setup.url" -Raw
 $SetupFile = "$Dir\setup.json"
 (New-Object System.Net.WebClient).DownloadFile($URI, $SetupFile)

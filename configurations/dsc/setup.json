@@ -56,5 +56,8 @@
       "Name": "rsWPI",
       "RequiredVersion": "master"
     }
-  ]
+  ],
+  "Data": {
+    "FileContents1": "CONTENT FROM setup.json"
+  }
 }

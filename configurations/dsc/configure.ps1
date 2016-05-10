@@ -28,6 +28,10 @@ $WPIProducts = @(
     @{
         Name = "WDeployPS"
         DependsOn = "[WindowsFeature]IIS"
+    },
+    @{
+        Name = "UrlRewrite2"
+        DependsOn = "[WindowsFeature]IIS"
     }
 )
 
@@ -37,6 +41,10 @@ $WebApplications = @(
         Name = "WebApplication1"
         PhysicalPath = "C:\Applications\WebApplication1"
     }
+    #,@{
+    #    Name = "WebApplication2"
+    #    PhysicalPath = "C:\Applications\WebApplication2"
+    #}
 )
 
 <#
@@ -166,50 +174,62 @@ Configuration WebNode {
             }
         }
 
-        # Set an environment variable
+        # Install MSMQ
+        #WindowsFeature MSMQ {
+        #    Ensure          = "Present"
+        #    Name            = "MSMQ"
+        #}
+
+        ###
+        # Environment Variables
+        ##
         Environment BootstrapTypeEnvironmentVariable {
             Name   = "BootstrapType"
             Value  = $BootstrapConfig.bootstrap_type
             Ensure = "Present"
         }
 
-        # Set a Registry Key
+        ###
+        # Files
+        ###
+        File TestFile1 {
+            Ensure = "Present"  # You can also set Ensure to "Absent"
+            Type = "File" # Default is "File".
+            DestinationPath = "C:\cloud-automation\TestFile1.txt"
+            Contents = $SetupConfig.Data.FileContents1
+        }
+
+        ###
+        # Registry Keys
+        ###
         Registry KeyOne {
             Ensure    = "Present"  # You can also set Ensure to "Absent"
             Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings"
             ValueName = "Value1"
-            ValueData = "ExampleData"
+            ValueData = "ExampleData1"
             Force     = $true
         }
 
-        # Ensure a Registry Key doesn't exist
         Registry KeyTwo {
             Ensure    = "Absent"
             Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings"
             ValueName = "Value2"
+            ValueData = "ExampleData2"
             Force     = $true
         }
 
-        # Create a Group
+        ###
+        # Groups
+        ###
         Group GroupPresentExample {
              # This will create TestGroup1, if absent
              Ensure = "Present"
              GroupName = "TestGroup1"
         }
-
-        # Remove a Group
         Group GroupAbsentExample {
              # This will remove TestGroup2, if present
              Ensure = "Absent"
              GroupName = "TestGroup2"
-        }
-
-        # Create a file
-        File File1 {
-            Ensure = "Present"  # You can also set Ensure to "Absent"
-            Type = "File" # Default is "File".
-            DestinationPath = "C:\cloud-automation\TestFile1.txt"
-            Contents = "FILE CONTENT HERE"
         }
     }
 }
