@@ -34,7 +34,6 @@ $BootstrapConfig = (Get-Content $Dir\bootstrap-config.json) -join "`n" | Convert
 # Download our setup.json file
 # Load our remote Modules config file
 $URI = Get-Content "$Dir\setup.url" -Raw
-# @TODO Add API Token and other data?
 $SetupFile = "$Dir\setup.json"
 (New-Object System.Net.WebClient).DownloadFile($URI, $SetupFile)
 $SetupConfig = (Get-Content $SetupFile) -join "`n" | ConvertFrom-Json

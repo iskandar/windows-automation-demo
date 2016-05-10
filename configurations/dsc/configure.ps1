@@ -6,17 +6,23 @@ Start-Transcript -Path $Dir\logs\configure.log -Append
 # Load our bootstrap config
 $BootstrapConfig = (Get-Content $Dir\bootstrap-config.json) -join "`n" | ConvertFrom-Json
 
-# @TODO Load from JSON or YAML
+# Load our setup config
+$SetupFile = "$Dir\setup.json"
+$SetupConfig = (Get-Content $SetupFile) -join "`n" | ConvertFrom-Json
+
+# DSC Configuration Data
 $ConfigurationData = @{
     AllNodes = @();
     NonNodeData = ""
 }
 
+# A list of IIS Features to install
 $WebServerFeatures = @("Web-Mgmt-Console","Web-Mgmt-Service","Web-Default-Doc", `
                      "Web-Asp-Net45","Web-Dir-Browsing","Web-Http-Errors","Web-Static-Content", `
                      "Web-Http-Logging","Web-Stat-Compression","Web-Filtering", `
                      "Web-ISAPI-Ext","Web-ISAPI-Filter")
 
+# A list of Web Platform Installer products to install
 $WPIProducts = @(
     # WebDeploy for powershell, needed to allow remote WebDeploy-based deployments
     @{
@@ -25,6 +31,7 @@ $WPIProducts = @(
     }
 )
 
+# A list of Web Applications to set up
 $WebApplications = @(
     @{
         Name = "WebApplication1"
@@ -130,8 +137,8 @@ Configuration WebNode {
             }
         }
 
+        # Set up our WebApplications in IIS
         foreach ($App in $WebApplications) {
-            # Set up our demo WebApplication for IIS
             File "$($App.Name)-Root" {
                 DestinationPath = $App.PhysicalPath
                 Type            = "Directory"
@@ -159,26 +166,50 @@ Configuration WebNode {
             }
         }
 
+        # Set an environment variable
         Environment BootstrapTypeEnvironmentVariable {
             Name   = "BootstrapType"
             Value  = $BootstrapConfig.bootstrap_type
             Ensure = "Present"
         }
 
+        # Set a Registry Key
         Registry KeyOne {
             Ensure    = "Present"  # You can also set Ensure to "Absent"
-            Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo"
-            ValueName = "ExampleValue"
+            Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings"
+            ValueName = "Value1"
             ValueData = "ExampleData"
             Force     = $true
         }
 
-        Group GroupExample {
-             # This will remove TestGroup, if present
-             # To create a new group, set Ensure to "Present“
+        # Ensure a Registry Key doesn't exist
+        Registry KeyOne {
+            Ensure    = "Absent"
+            Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings2"
+            Force     = $true
+        }
+
+        # Create a Group
+        Group GroupPresentExample {
+             # This will create TestGroup1, if absent
+             Ensure = "Present"
+             GroupName = "TestGroup1"
+        }
+
+        # Remove a Group
+        Group GroupAbsentExample {
+             # This will remove TestGroup2, if present
              Ensure = "Absent"
-             GroupName = "TestGroup"
-         }
+             GroupName = "TestGroup2"
+        }
+
+        # Create a file
+        File File1 {
+            Ensure = "Present"  # You can also set Ensure to "Absent"
+            Type = "File" # Default is "File".
+            DestinationPath = "C:\Users\Public\Documents\DSCDemo\DemoDestination"
+            Contents = "FILE CONTENT HERE"
+        }
     }
 }
 
