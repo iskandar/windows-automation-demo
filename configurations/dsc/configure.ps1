@@ -198,6 +198,12 @@ Configuration WebNode {
             DestinationPath = "C:\cloud-automation\TestFile1.txt"
             Contents = $SetupConfig.Data.FileContents1
         }
+        File TestFile2 {
+            Ensure = "Present"
+            Type = "File"
+            DestinationPath = "C:\cloud-automation\TestFile2.txt"
+            Contents = "Static file content from configure.ps1"
+        }
 
         ###
         # Registry Keys
@@ -206,15 +212,22 @@ Configuration WebNode {
             Ensure    = "Present"  # You can also set Ensure to "Absent"
             Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings"
             ValueName = "Value1"
-            ValueData = "ExampleData1"
+            # Dynamic value from our setup.json data
+            ValueData = $SetupConfig.Data.RegistryKey1
             Force     = $true
         }
-
         Registry KeyTwo {
-            Ensure    = "Absent"
+            Ensure    = "Present"  # You can also set Ensure to "Absent"
             Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings"
             ValueName = "Value2"
-            ValueData = "ExampleData2"
+            ValueData = "Static Value Data"
+            Force     = $true
+        }
+        Registry KeyThree {
+            Ensure    = "Absent"
+            Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings"
+            ValueName = "Value3"
+            ValueData = "ExampleData3"
             Force     = $true
         }
 

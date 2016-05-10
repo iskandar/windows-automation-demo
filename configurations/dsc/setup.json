@@ -1,4 +1,8 @@
 {
+  "Data": {
+    "FileContents1": "File content from setup.json",
+    "RegistryKey1": "Registry Key value from setup.json"
+  },
   "Scripts": [
     {
       "URI": "https://raw.githubusercontent.com/iskandar/windows-automation-demo/master/configurations/dsc/configure.ps1",
@@ -44,9 +48,13 @@
       "Repository": "PSGallery"
     },
     {
-
       "Name": "xDscDiagnostics",
       "RequiredVersion": "2.2.0.0",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "cChoco",
+      "RequiredVersion": "2.0.5.22",
       "Repository": "PSGallery"
     }
   ],
@@ -56,8 +64,5 @@
       "Name": "rsWPI",
       "RequiredVersion": "master"
     }
-  ],
-  "Data": {
-    "FileContents1": "CONTENT FROM setup.json"
-  }
+  ]
 }
