@@ -183,9 +183,10 @@ Configuration WebNode {
         }
 
         # Ensure a Registry Key doesn't exist
-        Registry KeyOne {
+        Registry KeyTwo {
             Ensure    = "Absent"
-            Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings2"
+            Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings"
+            ValueName = "Value2"
             Force     = $true
         }
 
@@ -207,7 +208,7 @@ Configuration WebNode {
         File File1 {
             Ensure = "Present"  # You can also set Ensure to "Absent"
             Type = "File" # Default is "File".
-            DestinationPath = "C:\Users\Public\Documents\DSCDemo\DemoDestination"
+            DestinationPath = "C:\cloud-automation\TestFile1.txt"
             Contents = "FILE CONTENT HERE"
         }
     }
