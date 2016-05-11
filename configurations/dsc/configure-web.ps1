@@ -91,7 +91,7 @@ Configuration WebNode {
             Name            = "Web-Server"
         }
 
-        # IIS and related features
+        # IIS-related features
         foreach ($Feature in $WebServerFeatures) {
             WindowsFeature "$Feature$Number" {
                 Ensure     = "Present"
@@ -104,14 +104,7 @@ Configuration WebNode {
             }
         }
 
-        # Stop the default website
-        xWebsite DefaultSite {
-            Ensure          = "Present"
-            Name            = "Default Web Site"
-            State           = "Stopped"
-            DependsOn       = "[WindowsFeature]IIS"
-        }
-
+        # Web Platform installer products
         foreach ($Product in $WPIProducts) {
             rsWPI $Product.Name {
                 Product    = $Product.Name
@@ -121,6 +114,15 @@ Configuration WebNode {
                 Message = "Finished adding WPI Product $($Product.Name)"
                 DependsOn = "[rsWPI]$($Product.Name)"
             }
+        }
+
+        # Remove the default website
+        xWebsite DefaultSite {
+            Ensure          = "Absent"
+            Name            = "Default Web Site"
+            PhysicalPath    = "C:\inetpub\wwwroot"
+            State           = "Stopped"
+            DependsOn       = "[WindowsFeature]IIS"
         }
 
         # Set up our WebApplications in IIS
