@@ -47,6 +47,15 @@ $WebApplications = @(
     #}
 )
 
+# A list of Chocolatey packages
+$ChocoPackages = @(
+    #"notepadplusplus.install",
+    "git.install"
+    #"nodejs.install",
+    #"googlechrome",
+    #"windirstat"
+)
+
 <#
 
 Do our main config
@@ -159,6 +168,24 @@ Configuration WebNode {
         #    Ensure          = "Present"
         #    Name            = "MSMQ"
         #}
+
+        ###
+        # Chocolatey installer
+        ###
+        cChocoInstaller installChoco {
+            InstallDir = "C:\choco"
+        }
+
+        ###
+        # Choco packages
+        ###
+        foreach ($Package in $ChocoPackages) {
+            cChocoPackageInstaller $Package
+            {
+                Name      = $Package
+                DependsOn = "[cChocoInstaller]installChoco"
+            }
+        }
 
         ###
         # Environment Variables
