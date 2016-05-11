@@ -11,14 +11,9 @@
   ],
   "CallbackURLs": [
     {
-      "Name": "Requestb.in Test",
-      "URI": "http://requestb.in/17dycuv1?ExistingVar=1232131231",
-      "Description": "For Testing"
-    },
-    {
-      "Name": "Jenkins Deploy Job",
-      "URI": "http://jenkins.rax-demos.com/buildByToken/buildWithParameters?job=windows/app/deploy-web-node",
-      "Description": "Trigger an Application Deployment"
+      "Name": "Jenkins DSC Push Job",
+      "URI": "http://jenkins.rax-demos.com/buildByToken/buildWithParameters?job=windows/dsc/dsc-push-node?DEPLOY=1",
+      "Description": "Trigger a DSC Push"
     }
   ],
   "PSGallery": [
