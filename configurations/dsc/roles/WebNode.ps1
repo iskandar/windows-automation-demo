@@ -1,7 +1,5 @@
 
 $Dir = "C:\cloud-automation"
-New-Item -Path $Dir\logs -ItemType Directory -ErrorAction SilentlyContinue
-Start-Transcript -Path $Dir\logs\configure.log -Append
 
 # Load our bootstrap config
 $BootstrapConfig = (Get-Content $Dir\bootstrap-config.json) -join "`n" | ConvertFrom-Json
@@ -49,36 +47,14 @@ $WebApplications = @(
 
 <#
 
-Set up the LCM
-
-#>
-Configuration LCMConfig {
-    LocalConfigurationManager {
-        CertificateID = (Get-ChildItem Cert:\LocalMachine\My)[0].Thumbprint
-        AllowModuleOverwrite = $true
-        ConfigurationModeFrequencyMins = 30
-        ConfigurationMode = 'ApplyAndAutoCorrect'
-        RebootNodeIfNeeded = $false
-        RefreshMode = 'PUSH'
-        RefreshFrequencyMins = 30
-        DebugMode = 'ForceModuleImport'
-    }
-}
-
-LCMConfig
-Set-DscLocalConfigurationManager -Path .\LCMConfig -Verbose -Force
-
-
-<#
-
 Do our main config
 
 #>
 
 Configuration WebNode {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName rsWPI,xWebAdministration,xTimeZone,xWinEventLog
-    Node localhost {
+    Import-DscResource -ModuleName rsWPI,xWebAdministration,xTimeZone,xWinEventLog,cChoco
+    Node NODE_NAME {
 
         # Set the timezone to UTC
         xTimeZone TZ {
@@ -113,15 +89,7 @@ Configuration WebNode {
             Name            = "Web-Server"
         }
 
-        # Stop the default website
-        xWebsite DefaultSite {
-            Ensure          = "Present"
-            Name            = "Default Web Site"
-            State           = "Stopped"
-            DependsOn       = "[WindowsFeature]IIS"
-        }
-
-        # IIS and related features
+        # IIS-related features
         foreach ($Feature in $WebServerFeatures) {
             WindowsFeature "$Feature$Number" {
                 Ensure     = "Present"
@@ -134,6 +102,7 @@ Configuration WebNode {
             }
         }
 
+        # Web Platform installer products
         foreach ($Product in $WPIProducts) {
             rsWPI $Product.Name {
                 Product    = $Product.Name
@@ -143,6 +112,15 @@ Configuration WebNode {
                 Message = "Finished adding WPI Product $($Product.Name)"
                 DependsOn = "[rsWPI]$($Product.Name)"
             }
+        }
+
+        # Remove the default website
+        xWebsite DefaultSite {
+            Ensure          = "Absent"
+            Name            = "Default Web Site"
+            PhysicalPath    = "C:\inetpub\wwwroot"
+            State           = "Stopped"
+            DependsOn       = "[WindowsFeature]IIS"
         }
 
         # Set up our WebApplications in IIS
@@ -179,6 +157,13 @@ Configuration WebNode {
         #    Ensure          = "Present"
         #    Name            = "MSMQ"
         #}
+
+        ###
+        # Chocolatey installer
+        ###
+        cChocoInstaller installChoco {
+            InstallDir = "C:\choco"
+        }
 
         ###
         # Environment Variables
@@ -248,7 +233,3 @@ Configuration WebNode {
 }
 
 WebNode -ConfigurationData $ConfigurationData
-Start-DscConfiguration -Path .\WebNode -Wait -Verbose -Force
-
-
-Stop-Transcript
