@@ -44,7 +44,6 @@ function SetupWinRM {
     $PublicIP = ((Get-NetIPConfiguration).IPv4Address | Where-Object {$_.InterfaceAlias -eq "public0"}).IpAddress
     Enable-PSRemoting -Force
     $Cert = New-SelfSignedCertificate -CertstoreLocation Cert:\LocalMachine\My -DnsName $PublicIP
-    Export-Certificate -Cert $Cert -FilePath C:\temp\cert
     Remove-Item -Path WSMan:\localhost\listener\listener* -Recurse
     New-Item -Path WSMan:\localhost\Listener -Transport HTTPS -Address * -CertificateThumbPrint $Cert.Thumbprint -Force
     Restart-Service WinRm
