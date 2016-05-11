@@ -47,15 +47,6 @@ $WebApplications = @(
     #}
 )
 
-# A list of Chocolatey packages
-$ChocoPackages = @(
-    #"notepadplusplus.install",
-    #"git.install",
-    #"nodejs.install",
-    #"googlechrome",
-    "windirstat"
-)
-
 <#
 
 Do our main config
@@ -174,16 +165,6 @@ Configuration WebNode {
         ###
         cChocoInstaller installChoco {
             InstallDir = "C:\choco"
-        }
-
-        ###
-        # Choco packages
-        ###
-        foreach ($Package in $ChocoPackages) {
-            cChocoPackageInstaller $Package {
-                Name      = $Package
-                DependsOn = "[cChocoInstaller]installChoco"
-            }
         }
 
         ###
