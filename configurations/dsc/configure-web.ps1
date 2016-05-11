@@ -64,7 +64,7 @@ Do our main config
 
 Configuration WebNode {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
-    Import-DscResource -ModuleName rsWPI,xWebAdministration,xTimeZone,xWinEventLog
+    Import-DscResource -ModuleName rsWPI,xWebAdministration,xTimeZone,xWinEventLog,cChoco
     Node NODE_NAME {
 
         # Set the timezone to UTC
@@ -180,8 +180,7 @@ Configuration WebNode {
         # Choco packages
         ###
         foreach ($Package in $ChocoPackages) {
-            cChocoPackageInstaller $Package
-            {
+            cChocoPackageInstaller $Package {
                 Name      = $Package
                 DependsOn = "[cChocoInstaller]installChoco"
             }
