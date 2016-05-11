@@ -91,14 +91,6 @@ Configuration WebNode {
             Name            = "Web-Server"
         }
 
-        # Stop the default website
-        xWebsite DefaultSite {
-            Ensure          = "Present"
-            Name            = "Default Web Site"
-            State           = "Stopped"
-            DependsOn       = "[WindowsFeature]IIS"
-        }
-
         # IIS and related features
         foreach ($Feature in $WebServerFeatures) {
             WindowsFeature "$Feature$Number" {
@@ -110,6 +102,14 @@ Configuration WebNode {
                 Message = "Finished adding WindowsFeature $Feature$Number"
                 DependsOn = "[WindowsFeature]$Feature$Number"
             }
+        }
+
+        # Stop the default website
+        xWebsite DefaultSite {
+            Ensure          = "Present"
+            Name            = "Default Web Site"
+            State           = "Stopped"
+            DependsOn       = "[WindowsFeature]IIS"
         }
 
         foreach ($Product in $WPIProducts) {

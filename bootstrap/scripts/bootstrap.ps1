@@ -1,8 +1,9 @@
 <#
 
-The minimal core bootstrap task.
+The minimal core bootstrap task. This should only ever run ONCE per server.
 
 * Designed for Windows Server 2012R2.
+* Sets up basic WinRM configuration
 * Installs WMF5
 * Sets up an 'on boot' task to run 'setup-shim.ps1'
 * Reboots!
