@@ -46,7 +46,7 @@ function SetupWinRM {
     $Cert = New-SelfSignedCertificate -CertstoreLocation Cert:\LocalMachine\My -DnsName $PublicIP
     Export-Certificate -Cert $Cert -FilePath C:\temp\cert
     Remove-Item -Path WSMan:\localhost\listener\listener* -Recurse
-    New-Item -Path WSMan:\localhost\Listener -Transport HTTPS -Address * -CertificateThumbPrint $Cert.Thumbprint –Force
+    New-Item -Path WSMan:\localhost\Listener -Transport HTTPS -Address * -CertificateThumbPrint $Cert.Thumbprint -Force
     Restart-Service WinRm
 }
 
