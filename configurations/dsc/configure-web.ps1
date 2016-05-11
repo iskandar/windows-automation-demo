@@ -50,10 +50,10 @@ $WebApplications = @(
 # A list of Chocolatey packages
 $ChocoPackages = @(
     #"notepadplusplus.install",
-    "git.install"
+    #"git.install",
     #"nodejs.install",
     #"googlechrome",
-    #"windirstat"
+    "windirstat"
 )
 
 <#
