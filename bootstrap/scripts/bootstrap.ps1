@@ -35,7 +35,26 @@ function Install-WMF5 {
     Start-Process -Wait -FilePath "${WMF5TempDir}\${WMF5FileName}" -ArgumentList '/quiet /norestart' -Verbose
 }
 
+<#
+
+Set up WinRM
+
+#>
+function SetupWinRM {
+    $PublicIP = ((Get-NetIPConfiguration).IPv4Address | Where-Object {$_.InterfaceAlias -eq "public0"}).IpAddress
+    Enable-PSRemoting -Force
+    $Cert = New-SelfSignedCertificate -CertstoreLocation Cert:\LocalMachine\My -DnsName $PublicIP
+    Export-Certificate -Cert $Cert -FilePath C:\temp\cert
+    Remove-Item -Path WSMan:\localhost\listener\listener* -Recurse
+    New-Item -Path WSMan:\localhost\Listener -Transport HTTPS -Address * -CertificateThumbPrint $Cert.Thumbprint –Force
+    Restart-Service WinRm
+}
+
+<#
+
 # Set up a boot task to call our setup-shim
+
+#>
 function Create-BootTask {
 
     $TaskName = 'rsBoot'
@@ -64,7 +83,7 @@ function Create-BootTask {
     Register-ScheduledTask $TaskName -InputObject $D
 }
 
-
+SetupWinRM
 Create-BootTask
 Install-WMF5
 Stop-Transcript
