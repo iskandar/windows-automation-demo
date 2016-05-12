@@ -5,7 +5,7 @@ $Dir = "C:\cloud-automation"
 $BootstrapConfig = (Get-Content $Dir\bootstrap-config.json) -join "`n" | ConvertFrom-Json
 
 # Load our setup config
-$SetupFile = "$Dir\setup.json"
+$SetupFile = "${ENV:WORKSPACE}\configurations\dsc\setup.json"
 $SetupConfig = (Get-Content $SetupFile) -join "`n" | ConvertFrom-Json
 
 # DSC Configuration Data
@@ -205,7 +205,7 @@ Configuration WebNode {
             Ensure    = "Present"  # You can also set Ensure to "Absent"
             Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings"
             ValueName = "Value2"
-            ValueData = "Static Value from configure.ps1"
+            ValueData = "Value from configure.ps1"
             Force     = $true
         }
         Registry KeyThree {
