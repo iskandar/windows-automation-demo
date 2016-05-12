@@ -187,7 +187,7 @@ Configuration WebNode {
             Ensure = "Present"
             Type = "File"
             DestinationPath = "C:\cloud-automation\TestFile2.txt"
-            Contents = "I CAN'T WAIT FOR THE WEEKEND"
+            Contents = "Static file content from configure.ps1"
         }
 
         ###
