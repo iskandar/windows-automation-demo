@@ -49,7 +49,6 @@ Options:
   --api_token=<t>               An API token added to callback and script URLs.
   --aa_dsc_reg_url=<u>          An Azure Automation DSC Registration URL
   --aa_dsc_reg_key=<k>          An Azure Automation DSC Registration Key
-  --aa_dsc_node_config_name=<n> An Azure Automation DSC Node Configuration Name
 
 Environment variables:
   OS_REGION               A Rackspace Public Cloud region (default: LON)
@@ -59,7 +58,6 @@ Environment variables:
   SETUP_API_TOKEN         An API token added to callback and script URLs (overrides any value specified with --api_token)
   AA_DSC_REG_URL          An Azure Automation DSC Registration URL (overrides any value specified with --aa_dsc_reg_url)
   AA_DSC_REG_KEY          An Azure Automation DSC Registration Key (overrides any value specified with --aa_dsc_reg_key)
-  AA_DSC_NODE_CONFIG_NAME An Azure Automation DSC Node Configuration Name (overrides any value specified with --aa_dsc_node_config_name)
 """
 
 # Parse our CLI arguments
@@ -85,7 +83,6 @@ api_token = os.environ.get('SETUP_API_TOKEN', arguments['--api_token'])
 # Azure Automation params
 aa_dsc_reg_url = os.environ.get('AA_DSC_REG_URL', arguments['--aa_dsc_reg_url'])
 aa_dsc_reg_key = os.environ.get('AA_DSC_REG_KEY', arguments['--aa_dsc_reg_key'])
-aa_dsc_node_config_name = os.environ.get('AA_DSC_NODE_CONFIG_NAME', arguments['--aa_dsc_node_config_name'])
 
 # Authenticate
 pyrax.set_setting("identity_type", "rackspace")
@@ -166,8 +163,7 @@ template_vars = {
     "node_username": node_username,
     "node_password": node_password,
     "aa_dsc_reg_url": aa_dsc_reg_url,
-    "aa_dsc_reg_key": aa_dsc_reg_key,
-    "aa_dsc_node_config_name": aa_dsc_node_config_name
+    "aa_dsc_reg_key": aa_dsc_reg_key
 }
 print("", file=sys.stderr)
 print("--- Params", file=sys.stderr)

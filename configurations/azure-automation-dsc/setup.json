@@ -1,7 +1,8 @@
 {
   "Data": {
     "FileContents1": "File content from setup.json",
-    "RegistryKey1": "Value from setup.json"
+    "RegistryKey1": "Value from setup.json",
+    "NodeConfigurationName": "ExampleServerConfig.WebServer"
   },
   "Scripts": [
     {
