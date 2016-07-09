@@ -101,7 +101,7 @@ $Params = @{
      RegistrationUrl = $BootstrapConfig.aa_dsc_reg_url;
      RegistrationKey = $BootstrapConfig.aa_dsc_reg_key;
      ComputerName = @('localhost');
-     NodeConfigurationName = $BootstrapConfig.aa_dsc_node_config_name;
+     NodeConfigurationName = $SetupConfig.Data.NodeConfigurationName;
      RefreshFrequencyMins = 30;
      ConfigurationModeFrequencyMins = 15;
      RebootNodeIfNeeded = $False;
@@ -115,5 +115,7 @@ $Params = @{
 # For more info about splatting, run: Get-Help -Name about_Splatting
 DscMetaConfigs @Params
 
+# Apply the LCM configuration
+Set-DscLocalConfigurationManager -Path .\DscMetaConfigs -Verbose -Force
 
 Stop-Transcript

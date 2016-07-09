@@ -1,13 +1,4 @@
 
-$Dir = "C:\cloud-automation"
-
-# Load our bootstrap config
-$BootstrapConfig = (Get-Content $Dir\bootstrap-config.json) -join "`n" | ConvertFrom-Json
-
-# Load our setup config
-$SetupFile = "${ENV:WORKSPACE}\configurations\dsc\setup.json"
-$SetupConfig = (Get-Content $SetupFile) -join "`n" | ConvertFrom-Json
-
 # DSC Configuration Data
 $ConfigurationData = @{
     AllNodes = @();
@@ -51,10 +42,10 @@ Do our main config
 
 #>
 
-Configuration WebNode {
+Configuration ExampleConfiguration {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName rsWPI,xWebAdministration,xTimeZone,xWinEventLog,cChoco
-    Node NODE_NAME {
+    Node WebNode {
 
         # Set the timezone to UTC
         xTimeZone TZ {
@@ -170,7 +161,8 @@ Configuration WebNode {
         ##
         Environment BootstrapTypeEnvironmentVariable {
             Name   = "BootstrapType"
-            Value  = $BootstrapConfig.bootstrap_type
+            # @TODO Dynamic value from our AA DSC data
+            Value  = "STATIC"
             Ensure = "Present"
         }
 
@@ -181,7 +173,8 @@ Configuration WebNode {
             Ensure = "Present"  # You can also set Ensure to "Absent"
             Type = "File" # Default is "File".
             DestinationPath = "C:\cloud-automation\TestFile1.txt"
-            Contents = $SetupConfig.Data.FileContents1
+            # @TODO Dynamic value from our AA DSC data
+            Contents = "STATIC"
         }
         File TestFile2 {
             Ensure = "Present"
@@ -197,8 +190,8 @@ Configuration WebNode {
             Ensure    = "Present"  # You can also set Ensure to "Absent"
             Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\WindowsAutomationDemo\Settings"
             ValueName = "Value1"
-            # Dynamic value from our setup.json data
-            ValueData = $SetupConfig.Data.RegistryKey1
+            # @TODO Dynamic value from our AA DSC data
+            ValueData = "STATIC"
             Force     = $true
         }
         Registry KeyTwo {
@@ -231,5 +224,3 @@ Configuration WebNode {
         }
     }
 }
-
-WebNode -ConfigurationData $ConfigurationData
