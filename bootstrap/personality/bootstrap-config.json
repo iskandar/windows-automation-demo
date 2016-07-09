@@ -6,5 +6,8 @@
     "app_name": "{{app_name}}",
     "environment_name": "{{environment_name}}",
     "domain_name": "{{domain_name}}",
-    "rackspace_username": "{{rackspace_username}}"
+    "rackspace_username": "{{rackspace_username}}",
+    "aa_dsc_reg_url": "{{aa_dsc_reg_url}}",
+    "aa_dsc_reg_key": "{{aa_dsc_reg_key}}",
+    "aa_dsc_node_config_name": "{{aa_dsc_node_config_name}}"
 }

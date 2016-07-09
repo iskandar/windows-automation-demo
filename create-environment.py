@@ -23,6 +23,9 @@ Usage:
                         [--base_script_url=<u>]
                         [--setup_url=<u>]
                         [--api_token=<t>]
+                        [--aa_dsc_reg_url=<u>]
+                        [--aa_dsc_reg_key=<k>]
+                        [--aa_dsc_node_config_name=<n>]
   create-environment.py (-h | --help)
   create-environment.py --version
 
@@ -31,26 +34,32 @@ Arguments:
   ENVIRONMENT           The name of the environment (e.g. stg, prd)
 
 Options:
-  -h --help             Show this screen.
-  --bootstrap_type=<t>  The server bootstrap type ('dsc' or 'chef') [default: dsc].
-  --initial_policy=<p>  The initial scaling policy to trigger after creation [default: Set to 2].
-  --node_username=<u>   The local admin username [default: localadmin].
-  --node_password=<pw>  The local admin password [default: Q1w2e3r4].
-  --image_name=<i>      The Rackspace Public Cloud server image name [default: Windows Server 2012 R2].
-  --flavor_id=<f>       The Rackspace Public Cloud server flavor ID [default: general1-2].
-  --domain_name=<d>     A base domain name to use for subdomains
-  --base_script_url=<u> The base URL for our bootstrap.ps1 and setup.ps1 scripts
-                        [default: https://raw.githubusercontent.com/iskandar/windows-automation-demo/bootstrap/scripts].
-  --setup_url=<u>       The URL for a setup.json manifest file
-                        [default: https://raw.githubusercontent.com/iskandar/windows-automation-demo/configurations/dsc/setup.json].
-  --api_token=<t>       An API token added to callback and script URLs.
+  -h --help                     Show this screen.
+  --bootstrap_type=<t>          The server bootstrap type ('dsc' or 'chef') [default: dsc].
+  --initial_policy=<p>          The initial scaling policy to trigger after creation [default: Set to 2].
+  --node_username=<u>           The local admin username [default: localadmin].
+  --node_password=<pw>          The local admin password [default: Q1w2e3r4].
+  --image_name=<i>              The Rackspace Public Cloud server image name [default: Windows Server 2012 R2].
+  --flavor_id=<f>               The Rackspace Public Cloud server flavor ID [default: general1-2].
+  --domain_name=<d>             A base domain name to use for subdomains
+  --base_script_url=<u>         The base URL for our bootstrap.ps1 and setup.ps1 scripts
+                                [default: https://raw.githubusercontent.com/iskandar/windows-automation-demo/bootstrap/scripts].
+  --setup_url=<u>               The URL for a setup.json manifest file
+                                [default: https://raw.githubusercontent.com/iskandar/windows-automation-demo/configurations/dsc/setup.json].
+  --api_token=<t>               An API token added to callback and script URLs.
+  --aa_dsc_reg_url=<u>          An Azure Automation DSC Registration URL
+  --aa_dsc_reg_key=<k>          An Azure Automation DSC Registration Key
+  --aa_dsc_node_config_name=<n> An Azure Automation DSC Node Configuration Name
 
 Environment variables:
-  OS_REGION             A Rackspace Public Cloud region (default: LON)
-  OS_USERNAME           A Rackspace Public Cloud username
-  OS_API_KEY            A Rackspace Public Cloud API key
-  NODE_PASSWORD         The Cloud Server local admin password (overrides any value specified with --node_password)
-  SETUP_API_TOKEN       An API token added to callback and script URLs (overrides any value specified with --api_token)
+  OS_REGION               A Rackspace Public Cloud region (default: LON)
+  OS_USERNAME             A Rackspace Public Cloud username
+  OS_API_KEY              A Rackspace Public Cloud API key
+  NODE_PASSWORD           The Cloud Server local admin password (overrides any value specified with --node_password)
+  SETUP_API_TOKEN         An API token added to callback and script URLs (overrides any value specified with --api_token)
+  AA_DSC_REG_URL          An Azure Automation DSC Registration URL (overrides any value specified with --aa_dsc_reg_url)
+  AA_DSC_REG_KEY          An Azure Automation DSC Registration Key (overrides any value specified with --aa_dsc_reg_key)
+  AA_DSC_NODE_CONFIG_NAME An Azure Automation DSC Node Configuration Name (overrides any value specified with --aa_dsc_node_config_name)
 """
 
 # Parse our CLI arguments
@@ -72,6 +81,11 @@ domain_name = arguments['--domain_name']
 base_script_url = arguments['--base_script_url']
 setup_url = arguments['--setup_url']
 api_token = os.environ.get('SETUP_API_TOKEN', arguments['--api_token'])
+
+# Azure Automation params
+aa_dsc_reg_url = os.environ.get('AA_DSC_REG_URL', arguments['--aa_dsc_reg_url'])
+aa_dsc_reg_key = os.environ.get('AA_DSC_REG_KEY', arguments['--aa_dsc_reg_key'])
+aa_dsc_node_config_name = os.environ.get('AA_DSC_NODE_CONFIG_NAME', arguments['--aa_dsc_node_config_name'])
 
 # Authenticate
 pyrax.set_setting("identity_type", "rackspace")
@@ -150,7 +164,10 @@ template_vars = {
     "subdomain_name": subdomain_name,
     "node_base_name": node_name,
     "node_username": node_username,
-    "node_password": node_password
+    "node_password": node_password,
+    "aa_dsc_reg_url": aa_dsc_reg_url,
+    "aa_dsc_reg_key": aa_dsc_reg_key,
+    "aa_dsc_node_config_name": aa_dsc_node_config_name
 }
 print("", file=sys.stderr)
 print("--- Params", file=sys.stderr)
