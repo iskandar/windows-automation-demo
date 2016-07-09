@@ -19,6 +19,16 @@
   ],
   "PSGallery": [
     {
+      "Name": "Azure",
+      "RequiredVersion": "1.5.1",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "AzureRM",
+      "RequiredVersion": "1.5.1",
+      "Repository": "PSGallery"
+    },
+    {
       "Name": "xSystemSecurity",
       "RequiredVersion": "1.1.0.0",
       "Repository": "PSGallery"

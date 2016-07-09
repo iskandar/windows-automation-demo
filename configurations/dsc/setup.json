@@ -18,6 +18,16 @@
   ],
   "PSGallery": [
     {
+      "Name": "Azure",
+      "RequiredVersion": "1.5.1",
+      "Repository": "PSGallery"
+    },
+    {
+      "Name": "AzureRM",
+      "RequiredVersion": "1.5.1",
+      "Repository": "PSGallery"
+    },
+    {
       "Name": "xPSDesiredStateConfiguration",
       "RequiredVersion": "3.9.0.0",
       "Repository": "PSGallery"
