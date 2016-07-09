@@ -36,7 +36,7 @@ Configuration ExampleConfiguration {
     # Get data from Azure Automation
     $TestCredential = Get-AutomationPSCredential -Name "TestCredential01"
     $LocalAdminCredential = Get-AutomationPSCredential -Name "LocalAdminCredential"
-    $TestCertificate = Get-AutomationCertificate -Name "Test01"
+    $TestCertificate = Get-AutomationCertificate -Name "Test1"
     $TestVar02 = Get-AutomationVariable -Name "TestVar02"
 
     Node $AllNodes.NodeName {
@@ -51,12 +51,12 @@ Configuration ExampleConfiguration {
             ##
             # Networking: IP Addresses
             ##
-            xNetAdapterBinding DisableIPv6 {
+            xNetAdapterBinding "DisableIPv6-Public" {
                 InterfaceAlias = "public0"
                 ComponentId    = "ms_tcpip6"
                 State          = "Disabled"
             }
-            xNetAdapterBinding DisableIPv6 {
+            xNetAdapterBinding "DisableIPv6-Private" {
                 InterfaceAlias = "private0"
                 ComponentId    = "ms_tcpip6"
                 State          = "Disabled"
@@ -66,9 +66,9 @@ Configuration ExampleConfiguration {
             for ($i = 0; $i -lt $Node.IPAddresses.length; $i++) {
                 $Item = $Node.IPAddresses[$i];
                 xIpAddress "NodeIp_$($i)" {
-                    InterfaceAlias $Item.InterfaceAlias
-                    IPAddress $Item.IPAddress
-                    SubnetMask $Item.SubnetMask
+                    InterfaceAlias = $Item.InterfaceAlias
+                    IPAddress      = $Item.IPAddress
+                    SubnetMask     = $Item.SubnetMask
                 }
             }
 
@@ -76,16 +76,18 @@ Configuration ExampleConfiguration {
             # Networking: DNS
             ##
             xDnsServerAddress DNS_1 {
-                Address $Node.DnsServer.Address
-                InterfaceAlias $Node.DnsServer.InterfaceAlias
+                Address        = $Node.DnsServer.Address
+                InterfaceAlias = $Node.DnsServer.InterfaceAlias
+                AddressFamily  = "IPv4"
             }
 
             ##
             # Networking: Default GW
             ##
             xDefaultGatewayAddress NetGw_1 {
-                Address $Node.DefaultGateway.Address
-                InterfaceAlias $Node.DefaultGateway.InterfaceAlias
+                Address        = $Node.DefaultGateway.Address
+                InterfaceAlias = $Node.DefaultGateway.InterfaceAlias
+                AddressFamily  = "IPv4"
             }
 
             ##
