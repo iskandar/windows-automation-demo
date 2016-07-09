@@ -13,8 +13,8 @@
   "CallbackURLs": [ ],
   "PSGallery": [
     {
-      "Name": "AzureRM",
-      "RequiredVersion": "1.5.1",
+      "Name": "GitHubRepository",
+      "RequiredVersion": "1.0.0",
       "Repository": "PSGallery"
     }
   ],

@@ -11,18 +11,6 @@ $WebServerFeatures = @("Web-Mgmt-Console","Web-Mgmt-Service","Web-Default-Doc", 
                      "Web-Http-Logging","Web-Stat-Compression","Web-Filtering", `
                      "Web-ISAPI-Ext","Web-ISAPI-Filter")
 
-# A list of Web Platform Installer products to install
-$WPIProducts = @(
-    # WebDeploy for powershell, needed to allow remote WebDeploy-based deployments
-    @{
-        Name = "WDeployPS"
-        DependsOn = "[WindowsFeature]IIS"
-    },
-    @{
-        Name = "UrlRewrite2"
-        DependsOn = "[WindowsFeature]IIS"
-    }
-)
 
 # A list of Web Applications to set up
 $WebApplications = @(
@@ -45,6 +33,11 @@ Do our main config
 Configuration ExampleConfiguration {
     Import-DscResource -ModuleName PSDesiredStateConfiguration
     Import-DscResource -ModuleName rsWPI,xWebAdministration,xTimeZone,xWinEventLog,cChoco
+
+    $credential = Get-AutomationPSCredential -Name "TestCredential01"
+    #$certificate = Get-AutomationCertificate -Name "TestCertificate01"
+    $var02 = Get-AutomationVariable -Name "TestVar02"
+
     Node WebNode {
 
         # Set the timezone to UTC
@@ -90,18 +83,6 @@ Configuration ExampleConfiguration {
             Log "$Feature$Number-Log" {
                 Message = "Finished adding WindowsFeature $Feature$Number"
                 DependsOn = "[WindowsFeature]$Feature$Number"
-            }
-        }
-
-        # Web Platform installer products
-        foreach ($Product in $WPIProducts) {
-            rsWPI $Product.Name {
-                Product    = $Product.Name
-                DependsOn  = $Product.DependsOn
-            }
-            Log "$($Product.Name)-Log" {
-                Message = "Finished adding WPI Product $($Product.Name)"
-                DependsOn = "[rsWPI]$($Product.Name)"
             }
         }
 
@@ -173,8 +154,8 @@ Configuration ExampleConfiguration {
             Ensure = "Present"  # You can also set Ensure to "Absent"
             Type = "File" # Default is "File".
             DestinationPath = "C:\cloud-automation\TestFile1.txt"
-            # @TODO Dynamic value from our AA DSC data
-            Contents = "STATIC"
+            # Dynamic data from a Azure Automation Variable asset
+            Contents = $var02
         }
         File TestFile2 {
             Ensure = "Present"
@@ -207,6 +188,18 @@ Configuration ExampleConfiguration {
             ValueName = "Value3"
             ValueData = "ExampleData3"
             Force     = $true
+        }
+
+        ###
+        # Users
+        ###
+        User TestUser01 {
+            Ensure = "Present"
+            UserName = $credential.UserName
+            Description = "Test User 01"
+            Password = $credential
+            PasswordChangeRequired = $false
+            PasswordNeverExpires = $true
         }
 
         ###
