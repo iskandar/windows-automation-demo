@@ -13,9 +13,9 @@ $SetupConfig = (Get-Content $SetupFile) -join "`n" | ConvertFrom-Json
 <#
 
 Set up the LCM
+@see https://azure.microsoft.com/en-gb/documentation/articles/automation-dsc-onboarding/#generating-dsc-metaconfigurations
 
 #>
-# The DSC configuration that will generate metaconfigurations
 [DscLocalConfigurationManager()]
 Configuration DscMetaConfigs
 {
@@ -101,7 +101,9 @@ $Params = @{
      RegistrationUrl = $BootstrapConfig.aa_dsc_reg_url;
      RegistrationKey = $BootstrapConfig.aa_dsc_reg_key;
      ComputerName = @('localhost');
-     NodeConfigurationName = $SetupConfig.Data.NodeConfigurationName;
+     #NodeConfigurationName = $SetupConfig.Data.NodeConfigurationName;
+     # We're going to use a node configuration for EACH host
+     NodeConfigurationName ="$($SetupConfig.Data.NodeBaseConfigurationName).$($env:COMPUTERNAME)"
      RefreshFrequencyMins = 30;
      ConfigurationModeFrequencyMins = 15;
      RebootNodeIfNeeded = $False;
