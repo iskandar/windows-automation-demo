@@ -97,20 +97,20 @@ Configuration DscMetaConfigs
 }
 
 # Create the metaconfigurations
+# @see https://msdn.microsoft.com/en-us/powershell/dsc/metaconfig
 $Params = @{
      RegistrationUrl = $BootstrapConfig.aa_dsc_reg_url;
      RegistrationKey = $BootstrapConfig.aa_dsc_reg_key;
      ComputerName = @('localhost');
-     #NodeConfigurationName = $SetupConfig.Data.NodeConfigurationName;
-     # We're going to use a node configuration for EACH host
-     NodeConfigurationName ="$($SetupConfig.Data.NodeBaseConfigurationName).$($env:COMPUTERNAME)"
-     RefreshFrequencyMins = 30;
-     ConfigurationModeFrequencyMins = 15;
+     NodeConfigurationName = $SetupConfig.Data.NodeConfigurationName;
+     RefreshFrequencyMins = 2;
+     ConfigurationModeFrequencyMins = 4;
      RebootNodeIfNeeded = $False;
      AllowModuleOverwrite = $True;
      ConfigurationMode = 'ApplyAndAutoCorrect';
      ActionAfterReboot = 'ContinueConfiguration';
      ReportOnly = $False;  # Set to $True to have machines only report to AA DSC but not pull from it
+     DebugMode = "None"
 }
 
 # Use PowerShell splatting to pass parameters to the DSC configuration being invoked

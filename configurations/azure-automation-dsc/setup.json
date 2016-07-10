@@ -2,7 +2,7 @@
   "Data": {
     "FileContents1": "File content from setup.json",
     "RegistryKey1": "Value from setup.json",
-    "NodeBaseConfigurationName": "ExampleConfiguration"
+    "NodeConfigurationName": "ExampleConfiguration.GenericWebNode"
   },
   "Scripts": [
     {
