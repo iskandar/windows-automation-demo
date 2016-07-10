@@ -103,14 +103,13 @@ $Params = @{
      RegistrationKey = $BootstrapConfig.aa_dsc_reg_key;
      ComputerName = @('localhost');
      NodeConfigurationName = $SetupConfig.Data.NodeConfigurationName;
-     RefreshFrequencyMins = 2;
-     ConfigurationModeFrequencyMins = 4;
+     RefreshFrequencyMins = 30;
+     ConfigurationModeFrequencyMins = 15;
      RebootNodeIfNeeded = $False;
      AllowModuleOverwrite = $True;
      ConfigurationMode = 'ApplyAndAutoCorrect';
      ActionAfterReboot = 'ContinueConfiguration';
      ReportOnly = $False;  # Set to $True to have machines only report to AA DSC but not pull from it
-     DebugMode = "None"
 }
 
 # Use PowerShell splatting to pass parameters to the DSC configuration being invoked
