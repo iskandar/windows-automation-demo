@@ -10,6 +10,15 @@
       "Destination": "configure.ps1"
     }
   ],
+  "Archives": [
+    {
+      "Name": "Demo File Archive",
+      "URI": "https://rdpsartifacts01.blob.core.windows.net/demo-01/files.zip",
+      "DestinationFile": "C:\\cloud-automation\\demo-files.zip",
+      "DestinationPath": "C:\\cloud-automation\\demo-files",
+      "Description": "Demo file archive"
+    }
+  ],
   "CallbackURLs": [ ],
   "PSGallery": [
     {

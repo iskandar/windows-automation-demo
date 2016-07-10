@@ -13,6 +13,7 @@ param(
     [switch] $SkipPSGalleryModules,
     [switch] $SkipGitHubRepositoryModules,
     [switch] $SkipRemoteScripts,
+    [switch] $SkipDownloadArchives,
     [switch] $SkipCallbacks,
     [switch] $SkipDisableOnBootTask
 )
@@ -82,6 +83,19 @@ function InstallGitHubRepositoryModules {
     }
 }
 
+<#
+
+Download remote Archives
+
+#>
+function DownloadArchives {
+    Write-Host "Downloading Remote Archives..."
+    $SetupConfig.Archives.GetEnumerator() | % {
+        Write-Host "Downloading $($_.URI)"
+        (New-Object System.Net.WebClient).DownloadFile($_.URI, $_.DestinationFile)
+        Expand-Archive -Path $_.DestinationFile -DestinationPath $_.DestinationPath -Force
+    }
+}
 
 <#
 
@@ -133,6 +147,9 @@ if ( ! $SkipGitHubRepositoryModules) {
 }
 if ( ! $SkipRemoteScripts) {
     RunRemoteScripts
+}
+if ( ! $SkipDownloadArchives) {
+    DownloadArchives
 }
 if ( ! $SkipCallbacks) {
     MakeCallbacks

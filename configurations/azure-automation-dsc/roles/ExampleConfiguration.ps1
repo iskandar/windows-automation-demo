@@ -51,43 +51,49 @@ Configuration ExampleConfiguration {
             ##
             # Networking: IP Addresses
             ##
-            xNetAdapterBinding "DisableIPv6-Public" {
-                InterfaceAlias = "public0"
-                ComponentId    = "ms_tcpip6"
-                State          = "Disabled"
-            }
-            xNetAdapterBinding "DisableIPv6-Private" {
-                InterfaceAlias = "private0"
-                ComponentId    = "ms_tcpip6"
-                State          = "Disabled"
-            }
+            if ($Node.ApplyIpAddresses) {
+                xNetAdapterBinding "DisableIPv6-Public" {
+                    InterfaceAlias = "public0"
+                    ComponentId    = "ms_tcpip6"
+                    State          = "Disabled"
+                }
+                xNetAdapterBinding "DisableIPv6-Private" {
+                    InterfaceAlias = "private0"
+                    ComponentId    = "ms_tcpip6"
+                    State          = "Disabled"
+                }
 
-            # Go through our loop
-            for ($i = 0; $i -lt $Node.IPAddresses.length; $i++) {
-                $Item = $Node.IPAddresses[$i];
-                xIpAddress "NodeIp_$($i)" {
-                    InterfaceAlias = $Item.InterfaceAlias
-                    IPAddress      = $Item.IPAddress
-                    SubnetMask     = $Item.SubnetMask
+                # Go through our loop
+                for ($i = 0; $i -lt $Node.IPAddresses.length; $i++) {
+                    $Item = $Node.IPAddresses[$i];
+                    xIpAddress "NodeIp_$($i)" {
+                        InterfaceAlias = $Item.InterfaceAlias
+                        IPAddress      = $Item.IPAddress
+                        SubnetMask     = $Item.SubnetMask
+                    }
                 }
             }
 
             ##
             # Networking: DNS
             ##
-            xDnsServerAddress DNS_1 {
-                Address        = $Node.DnsServer.Address
-                InterfaceAlias = $Node.DnsServer.InterfaceAlias
-                AddressFamily  = "IPv4"
+            if ($Node.ApplyDnsServer) {
+                xDnsServerAddress DNS_1 {
+                    Address        = $Node.DnsServer.Address
+                    InterfaceAlias = $Node.DnsServer.InterfaceAlias
+                    AddressFamily  = "IPv4"
+                }
             }
 
             ##
             # Networking: Default GW
             ##
-            xDefaultGatewayAddress NetGw_1 {
-                Address        = $Node.DefaultGateway.Address
-                InterfaceAlias = $Node.DefaultGateway.InterfaceAlias
-                AddressFamily  = "IPv4"
+            if ($Node.ApplyDefaultGateway) {
+                xDefaultGatewayAddress NetGw_1 {
+                    Address        = $Node.DefaultGateway.Address
+                    InterfaceAlias = $Node.DefaultGateway.InterfaceAlias
+                    AddressFamily  = "IPv4"
+                }
             }
 
             ##
@@ -168,6 +174,10 @@ Configuration ExampleConfiguration {
                 Value  = "STATIC"
                 Ensure = "Present"
             }
+
+            ###
+            # Remote Files
+            ###
 
             ###
             # Files

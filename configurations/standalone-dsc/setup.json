@@ -3,6 +3,7 @@
     "FileContents1": "File content from setup.json",
     "RegistryKey1": "Value from setup.json"
   },
+  "Archives": [ ],
   "Scripts": [
     {
       "URI": "https://raw.githubusercontent.com/iskandar/windows-automation-demo/master/configurations/standalone-dsc/configure.ps1",
