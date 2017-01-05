@@ -13,7 +13,7 @@
   "CallbackURLs": [
     {
       "Name": "Jenkins DSC Push Job",
-      "URI": "http://jenkins.rax-demos.com/buildByToken/buildWithParameters?job=windows/dsc/dsc-push-node",
+      "URI": "http://162.13.177.6/buildByToken/buildWithParameters?job=windows/dsc/dsc-push-node",
       "Description": "Trigger a DSC Push"
     }
   ],
